@@ -1,0 +1,20 @@
+package com.hms.rules.cicynnbn;
+
+import java.lang.Number;
+import com.hms.model.HitRecord;
+
+rule "CICYNNBN Contract 320"
+	dialect "mvel"
+	when
+		$hit : HitRecord( HIT_CI_ORIG_SOURCE_CODE_CREATE == "YN" || HIT_CI_LAST_SRCE_UPDATE_DETAIL == "YN" , HIT_PCF_CLAIM_TYPE not in ( "1", "01" ) , YNCLMTYP contains $hit.HIT_PCF_3BYTE_CONTRACT_NUM )
+	then
+		$hit.setRejected( true );
+		$hit.setJob( "CIC" );
+		$hit.setEditCode( "NBN02" );
+		$hit.setReason( "CICYNNBN If claim type, contract and carrier code is found on claim type control cards containing an 'I' in the Type field, reject the record. Claim type = "+$hit.getHIT_PCF_CLAIM_TYPE()+" & Contract Code = "+$hit.getHIT_PCF_3BYTE_CONTRACT_NUM()+" & Carrier Code = "+$hit.getHIT_CI_CARRIER_CODE() );
+		$hit.setInternal( "Unbillable Claims" );
+		$hit.setExternal( "Internal Action Needed" );
+		$hit.setFinalDetermination( "Actionable" );
+		$hit.setOwner( "HMS Rule" );
+		$hit.setProduct( "Direct Bill" );
+end

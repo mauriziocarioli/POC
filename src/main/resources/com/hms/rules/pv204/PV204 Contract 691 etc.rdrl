@@ -1,0 +1,12 @@
+package com.hms.rules;
+
+import java.lang.Number;
+import com.hms.model.HitRecord;
+
+rule "PV204 Contract 691 etc"
+	dialect "mvel"
+	when
+		$hit : HitRecord( prdTaxID1550 == null || prdTaxID1550 == "" , HIT_PCF_3BYTE_CONTRACT_NUM in ( "691", "309", "315", "597", "593" ) , checkDigitValid == true )
+	then
+		$hit.setL3000( "Y" );
+end

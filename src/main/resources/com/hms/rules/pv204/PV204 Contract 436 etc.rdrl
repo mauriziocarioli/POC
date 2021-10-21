@@ -1,0 +1,13 @@
+package com.hms.rules.pv204;
+
+import java.lang.Number;
+import com.hms.model.HitRecord;
+
+rule "PV204 Contract 436 etc"
+	dialect "mvel"
+	when
+		$hit : HitRecord( HIT_PCF_CLAIM_TYPE in ( "01", "02", "03" ) , HIT_PCF_3BYTE_CONTRACT_NUM in ( "436", "309" ) )
+	then
+		$hit.setL2067( "N" );
+		$hit.setL2068( "I" );
+end

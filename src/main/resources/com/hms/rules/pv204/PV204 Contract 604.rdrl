@@ -1,0 +1,13 @@
+package com.hms.rules.pv204;
+
+import java.lang.Number;
+import com.hms.model.HitRecord;
+
+rule "PV204 Contract 604"
+	dialect "mvel"
+	when
+		$hit : HitRecord( prdTaxID1550 == null || prdTaxID1550 == "" )
+	then
+		$hit.setL2068( "T" );
+		$hit.chekDigiValidation(  );
+end

@@ -1,0 +1,13 @@
+package com.hms.rules;
+
+import java.lang.Number;
+import com.hms.model.HitRecord;
+
+rule "Pay To Provider Lookup"
+	dialect "mvel"
+	when
+		$hit : HitRecord( HIT_PCF_SERVICING_PROVIDER_NUM == $hit.HIT_PCF_PAY_TO_PROVIDER_NUM , PAYTOPRDDATA == null )
+	then
+		$hit.setPAYTOPRDDATA( $hit.getPROVIDERHITDATA() );
+		$hit.setL2066( "N" );
+end

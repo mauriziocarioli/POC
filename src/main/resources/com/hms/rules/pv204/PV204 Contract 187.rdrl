@@ -1,0 +1,12 @@
+package com.hms.rules.pv204;
+
+import java.lang.Number;
+import com.hms.model.HitRecord;
+
+rule "PV204 Contract 187"
+	dialect "mvel"
+	when
+		$hit : HitRecord( HIT_PCF_3BYTE_CONTRACT_NUM == "187" , $specif : ST_SPECIF_USER_AREA_1550)
+	then
+		$hit.setPrdTaxID1550( $specif.substring(0,9) );
+end

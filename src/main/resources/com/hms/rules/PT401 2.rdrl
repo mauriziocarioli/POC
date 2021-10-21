@@ -1,0 +1,21 @@
+package com.hms.rules;
+
+import java.lang.Number;
+import com.hms.model.HitRecord;
+
+rule "PT401 2"
+	dialect "mvel"
+	ruleflow-group "CID_Rules"
+	when
+		$hit : HitRecord( HIT_CI_CARRIER_CODE == "BCVA" , principalProcedureCode1550 == "H" , HIT_PROCEDURE_CODE_5 not in ( "H0031", "H0032", "H0014", "H0019", "H0027" ) )
+	then
+		$hit.setRejected( true );
+		$hit.setJobName( "CIC" );
+		$hit.setEditCode( "PT401" );
+		$hit.setExternal( "Internal Action Needed" );
+		$hit.setInternal( "Unbillable Claims" );
+		$hit.setFinalDetermination( "Actionable" );
+		$hit.setOwner( "HMS Rule" );
+		$hit.setProduct( "Direct Bill" );
+		$hit.setReason( "TPLSCPT3_Carrier Code = BCVA & 1550_PRINC_PROD_CODE = "+$hit.getHIT_PCS10_PRINC_PROC_CODE() );
+end

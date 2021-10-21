@@ -1,0 +1,12 @@
+package com.hms.rules;
+
+import java.lang.Number;
+import com.hms.model.HitRecord;
+
+rule "Missing Name or Address"
+	dialect "mvel"
+	when
+		$hit : HitRecord( missingNameOrAddress == "TRUE" )
+	then
+		$hit.setL2067( "N" );
+end

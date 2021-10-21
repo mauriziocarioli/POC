@@ -1,0 +1,12 @@
+package com.hms.rules;
+
+import java.lang.Number;
+import com.hms.model.HitRecord;
+
+rule "Invalid ZIP"
+	dialect "mvel"
+	when
+		$hit : HitRecord( ZIPCODE_ISVALID == "FALSE" )
+	then
+		$hit.validateZIP(  );
+end

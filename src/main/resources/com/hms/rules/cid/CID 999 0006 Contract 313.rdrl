@@ -1,0 +1,20 @@
+package com.hms.rules.cid;
+
+import java.lang.Number;
+import com.hms.model.HitRecord;
+
+rule "CID 999 0006 Contract 313"
+	dialect "mvel"
+	when
+		$hit : HitRecord( HIT_CI_QHIT_RULE in ( "992", "993", "994", "995", "997" ) && HIT_PCF_3BYTE_CONTRACT_NUM == "313" && FLT_QHIT_Dis_Provider contains $hit.HIT_PCF_SERVICING_PROVIDER_NUM )
+	then
+		$hit.setDisallowed( false );
+		$hit.setEditCode( "CID_999_0006" );
+		$hit.setReason( "For CXT, QHIT Rule is "+$hit.getHIT_CI_QHIT_RULE()+" the servicing provider number is "+$hit.getHIT_PCF_SERVICING_PROVIDER_NUM() );
+		$hit.setInternal( "Unbillable Claims" );
+		$hit.setExternal( "Internal Action Needed" );
+		$hit.setFinalDetermination( "Actionable" );
+		$hit.setOwner( "Account Team" );
+		$hit.setProduct( "CI Disallowance" );
+		$hit.setCID_999_0006_Flag( "TRUE" );
+end

@@ -1,0 +1,13 @@
+package com.hms.rules;
+
+import java.lang.Number;
+import com.hms.model.HitRecord;
+
+rule "MMOH"
+	dialect "mvel"
+	when
+		$hit : HitRecord( HIT_PCF_CLAIM_TYPE > "03" , CARRIER_CODE_1550 == "MMOH" )
+	then
+		$hit.setL2067( "N" );
+		$hit.setL2068( "I" );
+end

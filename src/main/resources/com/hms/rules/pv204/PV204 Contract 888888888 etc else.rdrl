@@ -1,0 +1,12 @@
+package com.hms.rules;
+
+import java.lang.Number;
+import com.hms.model.HitRecord;
+
+rule "PV204 Contract 888888888 etc else"
+	dialect "mvel"
+	when
+		$hit : HitRecord( $provider : PROVIDERHITDATA, $provider.PROVIDER_YM_TAX_ID not in ( "000000000", "888888888", "999999999" ) , $provider.PROVIDER_TAX_ID in ( "000000000", "888888888", "999999999" ) )
+	then
+		$hit.setPrdTaxID1550( $provider.getPROVIDER_YM_TAX_ID() );
+end
