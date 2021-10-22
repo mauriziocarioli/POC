@@ -2,19 +2,23 @@ package com.hms.rules.cid;
 
 import java.lang.Number;
 import com.hms.model.HitRecord;
+import com.hms.model.CiDisallowance;
 
 rule "CID 999 0006 Contract 535"
 	dialect "mvel"
 	when
 		$hit : HitRecord( HIT_CI_QHIT_RULE in ( "992", "993", "994", "995", "997" ) && HIT_PCF_3BYTE_CONTRACT_NUM == "535" && servicingProviderNum12 in ( "340714458001", "340714618001", "341542312002", "340714684001", "341855775197", "340714593011", "34073316601" ) )
 	then
-		$hit.setCID_999_0006_Flag( "\"TRUE\"" );
+		CiDisallowance $cid = new CiDisallowance();
+		insert( $cid );
+		$cid.setCID_999_0006_Flag( "\"TRUE\"" );
+		$cid.setEditCode( "CID_999_0006" );
+		$cid.setReason( "For CXT, QHIT Rule is "+$hit.getHIT_CI_QHIT_RULE()+" the servicing provider number is "+$hit.getHIT_PCF_SERVICING_PROVIDER_NUM() );
+		$cid.setInternal( "Unbillable Claims" );
+		$cid.setExternal( "Internal Action Needed" );
+		$cid.setFinalDetermination( "Actionable" );
+		$cid.setOwner( "Account Team" );
+		$cid.setProduct( "CI Disallowance" );
+		$hit.addCiDisallowance($cid);
 		$hit.setDisallowed( false );
-		$hit.setEditCode( "CID_999_0006" );
-		$hit.setReason( "For CXT, QHIT Rule is "+$hit.getHIT_CI_QHIT_RULE()+" the servicing provider number is "+$hit.getHIT_PCF_SERVICING_PROVIDER_NUM() );
-		$hit.setInternal( "Unbillable Claims" );
-		$hit.setExternal( "Internal Action Needed" );
-		$hit.setFinalDetermination( "Actionable" );
-		$hit.setOwner( "Account Team" );
-		$hit.setProduct( "CI Disallowance" );
 end

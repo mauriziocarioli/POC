@@ -1,0 +1,164 @@
+package com.hms.rules.cid;
+//generated from Decision Table
+import com.hms.model.HitRecord;
+import com.hms.model.CiDisallowance;
+dialect "mvel";
+// rule values at B10, header at B5
+rule "CID 999 0009 Temp_10"
+	activation-group "first-hit-policy-activation-group"
+	when
+		$hit : HitRecord(HIT_PCF_CLAIM_FORM_IND == "U", withOtherPayingInsurances == "TRUE")
+	then
+		$hit.setDisallowed( false );
+		CiDisallowance $cid = new CiDisallowance();
+		insert( $cid );
+		$cid.setCID_999_0009_Flag( "TRUE" );
+		$cid.setEditCode( "CID_999_0009" );
+		$cid.setReason( "Institutional claim dropped for having an other insurance paid amount greater than $0.00" );
+		$cid.setInternal( "OTP Clean" );
+		$cid.setExternal( "Internal Action Needed" );
+		$cid.setFinalDetermination( "Actionable" );
+		$cid.setOwner( "HMS Rule" );
+		$cid.setProduct( "CI Disallowance" );
+		$hit.addCiDisallowance($cid);
+end
+
+// rule values at B11, header at B5
+rule "CID 999 0009 Temp_11"
+	activation-group "first-hit-policy-activation-group"
+	when
+		$hit : HitRecord(HIT_PCF_CLAIM_FORM_IND == "H")
+	then
+		$hit.setDisallowed( false );
+		CiDisallowance $cid = new CiDisallowance();
+		insert( $cid );
+		$cid.setCID_999_0009_Flag( "TRUE" );
+		$cid.setEditCode( "CID_999_0009" );
+		$cid.setReason( "Professional claim dropped for having a hit in the same ICN with an other insurance paid amount greater than $0.00" );
+		$cid.setInternal( "OTP Clean" );
+		$cid.setExternal( "Internal Action Needed" );
+		$cid.setFinalDetermination( "Actionable" );
+		$cid.setOwner( "HMS Rule" );
+		$cid.setProduct( "CI Disallowance" );
+		$hit.addCiDisallowance($cid);
+end
+
+// rule values at B12, header at B5
+rule "CID 999 0009 Temp_12"
+	activation-group "first-hit-policy-activation-group"
+	when
+		$hit : HitRecord(HIT_PCF_CLAIM_FORM_IND == "P", withOtherCoverages03050607 == "TRUE")
+	then
+		$hit.setDisallowed( false );
+		CiDisallowance $cid = new CiDisallowance();
+		insert( $cid );
+		$cid.setCID_999_0009_Flag( "TRUE" );
+		$cid.setEditCode( "CID_999_0009" );
+		$cid.setReason( "RX claim: Cannot disallow certain other cov codes" );
+		$cid.setInternal( "Eligibility" );
+		$cid.setExternal( "Internal Action Needed" );
+		$cid.setFinalDetermination( "Actionable" );
+		$cid.setOwner( "Carrier Team" );
+		$cid.setProduct( "CI Disallowance" );
+		$hit.addCiDisallowance($cid);
+end
+
+// rule values at B13, header at B5
+rule "CID 999 0009 Temp_13"
+	activation-group "first-hit-policy-activation-group"
+	when
+		$hit : HitRecord(HIT_PCF_CLAIM_TYPE == "12", HIT_PCF_3BYTE_CONTRACT_NUM not in ('128', '305', '359'), withOtherCoverages03050607 == "TRUE")
+	then
+		$hit.setDisallowed( false );
+		CiDisallowance $cid = new CiDisallowance();
+		insert( $cid );
+		$cid.setCID_999_0009_Flag( "TRUE" );
+		$cid.setEditCode( "CID_999_0009" );
+		$cid.setReason( "RX claim: Cannot disallow certain other cov codes" );
+		$cid.setInternal( "Eligibility" );
+		$cid.setExternal( "Internal Action Needed" );
+		$cid.setFinalDetermination( "Actionable" );
+		$cid.setOwner( "Carrier Team" );
+		$cid.setProduct( "CI Disallowance" );
+		$hit.addCiDisallowance($cid);
+end
+
+// rule values at B14, header at B5
+rule "CID 999 0009 Temp_14"
+	activation-group "first-hit-policy-activation-group"
+	when
+		$hit : HitRecord(HIT_PCF_CLAIM_FORM_IND == "P", otherCovCode2chars in ('03', '05', '06', '07', '', '  '))
+	then
+		$hit.setDisallowed( false );
+		CiDisallowance $cid = new CiDisallowance();
+		insert( $cid );
+		$cid.setCID_999_0009_Flag( "TRUE" );
+		$cid.setEditCode( "CID_999_0009" );
+		$cid.setReason( "RX claim: Cannot disallow certain other cov codes" );
+		$cid.setInternal( "Eligibility" );
+		$cid.setExternal( "Internal Action Needed" );
+		$cid.setFinalDetermination( "Actionable" );
+		$cid.setOwner( "Carrier Team" );
+		$cid.setProduct( "CI Disallowance" );
+		$hit.addCiDisallowance($cid);
+end
+
+// rule values at B15, header at B5
+rule "CID 999 0009 Temp_15"
+	activation-group "first-hit-policy-activation-group"
+	when
+		$hit : HitRecord(HIT_PCF_CLAIM_TYPE == "12", HIT_PCF_3BYTE_CONTRACT_NUM == "128", otherCovCode2chars in ('03', '05', '06', '07', '', '  '))
+	then
+		$hit.setDisallowed( false );
+		CiDisallowance $cid = new CiDisallowance();
+		insert( $cid );
+    	$cid.setCID_999_0009_Flag( "TRUE" );
+		$cid.setEditCode( "CID_999_0009" );
+		$cid.setReason( "RX claim: Cannot disallow certain other cov codes" );
+		$cid.setInternal( "Eligibility" );
+		$cid.setExternal( "Internal Action Needed" );
+		$cid.setFinalDetermination( "Actionable" );
+		$cid.setOwner( "Carrier Team" );
+		$cid.setProduct( "CI Disallowance" );
+		$hit.addCiDisallowance($cid);
+end
+
+// rule values at B16, header at B5
+rule "CID 999 0009 Temp_16"
+	activation-group "first-hit-policy-activation-group"
+	when
+		$hit : HitRecord(HIT_PCF_CLAIM_FORM_IND == "P", otherCovCode1char in ('3', '5', '6', '7', '', ' '))
+	then
+		$hit.setDisallowed( false );
+		CiDisallowance $cid = new CiDisallowance();
+		insert( $cid );
+		$cid.setCID_999_0009_Flag( "TRUE" );
+		$cid.setEditCode( "CID_999_0009" );
+		$cid.setReason( "RX claim: Cannot disallow certain other cov codes" );
+		$cid.setInternal( "Eligibility" );
+		$cid.setExternal( "Internal Action Needed" );
+		$cid.setFinalDetermination( "Actionable" );
+		$cid.setOwner( "Carrier Team" );
+		$cid.setProduct( "CI Disallowance" );
+		$hit.addCiDisallowance($cid);
+end
+
+// rule values at B17, header at B5
+rule "CID 999 0009 Temp_17"
+	activation-group "first-hit-policy-activation-group"
+	when
+		$hit : HitRecord(HIT_PCF_CLAIM_TYPE == "12", HIT_PCF_3BYTE_CONTRACT_NUM == "305", otherCovCode1char in ('3', '5', '6', '7', '', ' '))
+	then
+		$hit.setDisallowed( false );
+		CiDisallowance $cid = new CiDisallowance();
+		insert( $cid );
+		$cid.setCID_999_0009_Flag( "TRUE" );
+		$cid.setEditCode( "CID_999_0009" );
+		$cid.setReason( "RX claim: Cannot disallow certain other cov codes" );
+		$cid.setInternal( "Eligibility" );
+		$cid.setExternal( "Internal Action Needed" );
+		$cid.setFinalDetermination( "Actionable" );
+		$cid.setOwner( "Carrier Team" );
+		$cid.setProduct( "CI Disallowance" );
+		$hit.addCiDisallowance($cid);
+end

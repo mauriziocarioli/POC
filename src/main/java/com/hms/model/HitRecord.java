@@ -1635,10 +1635,6 @@ public class HitRecord implements java.io.Serializable {
         this.CARRIER_CODE_1550 = CARRIER_CODE_1550;
     }
 
-    public void setCID_999_0010_Flag(String CID_999_0010_Flag) {
-        this.CID_999_0010_Flag = CID_999_0010_Flag;
-    }
-
     public String getCollectionLookup(String HIT_SERVICE_CALL, String HIT_EDIT_RESULT, String HIT_EDIT_CODE, String flag) {
         return CollectionLookup;
     }
@@ -1748,7 +1744,7 @@ public class HitRecord implements java.io.Serializable {
         this.rejectClaims = rejectClaims;
     }
 
-    public void addToRejectClaims(RejectClaim rejectClaim) {
+    public void addRejectClaim(RejectClaim rejectClaim) {
         this.rejectClaims.add(rejectClaim);
     }
 
@@ -1760,7 +1756,7 @@ public class HitRecord implements java.io.Serializable {
         this.ciDisallowances = ciDisallowances;
     }
 
-    public void addToCiDisallowances(CiDisallowance ciDisallowance) {
+    public void addCiDisallowance(CiDisallowance ciDisallowance) {
         this.ciDisallowances.add(ciDisallowance);
     }
 
@@ -1845,14 +1841,12 @@ public class HitRecord implements java.io.Serializable {
     }
 
     public void setMentalHealthDiagnosis(String mentalHealthDiagnosis) {
-
-        
-        if (n > 0) return "TRUE"; else return "FALSE";
-
+        this.mentalHealthDiagnosis = mentalHealthDiagnosis;
     }
 
     public String getMentalHealthDiagnosisWithDependentPregnancy() {
         int n = 0;
+        //TODO
         return mentalHealthDiagnosisWithDependentPregnancy;
     }
 

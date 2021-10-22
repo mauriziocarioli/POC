@@ -2,19 +2,23 @@ package com.hms.rules.cicynnbn;
 
 import java.lang.Number;
 import com.hms.model.HitRecord;
+import com.hms.model.RejectClaim;
 
 rule "CICYNNBN Contract YNCLMTYP"
 	dialect "mvel"
 	when
 		$hit : HitRecord( HIT_CI_ORIG_SOURCE_CODE_CREATE == "YN" || HIT_CI_LAST_SRCE_UPDATE_DETAIL == "YN" , HIT_PCF_CLAIM_TYPE == "12" )
 	then
+		RejectClaim $rejectClaim = new RejectClaim();
+		insert( $rejectClaim );
+		$rejectClaim.setJob( "CIC" );
+		$rejectClaim.setEditCode( "NBN03" );
+		$rejectClaim.setReason( "CICYNNBN If claim type, contract and carrier code is found on claim type control cards containing an 'X' in the Type field, reject the record. Claim type = "+$hit.getHIT_PCF_CLAIM_TYPE()+" & Contract Code = "+$hit.getHIT_PCF_3BYTE_CONTRACT_NUM()+" & Carrier Code = "+$hit.getHIT_CI_CARRIER_CODE() );
+		$rejectClaim.setInternal( "Unbillable Claims" );
+		$rejectClaim.setExternal( "Internal Action Needed" );
+		$rejectClaim.setFinalDetermination( "Actionable" );
+		$rejectClaim.setOwner( "HMS Rule" );
+		$rejectClaim.setProduct( "Direct Bill" );
+		$hit.addRejectClaim( $rejectClaim );
 		$hit.setRejected( true );
-		$hit.setJob( "CIC" );
-		$hit.setEditCode( "NBN03" );
-		$hit.setReason( "CICYNNBN If claim type, contract and carrier code is found on claim type control cards containing an 'X' in the Type field, reject the record. Claim type = "+$hit.getHIT_PCF_CLAIM_TYPE()+" & Contract Code = "+$hit.getHIT_PCF_3BYTE_CONTRACT_NUM()+" & Carrier Code = "+$hit.getHIT_CI_CARRIER_CODE() );
-		$hit.setInternal( "Unbillable Claims" );
-		$hit.setExternal( "Internal Action Needed" );
-		$hit.setFinalDetermination( "Actionable" );
-		$hit.setOwner( "HMS Rule" );
-		$hit.setProduct( "Direct Bill" );
 end

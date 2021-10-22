@@ -4,21 +4,20 @@ import java.lang.Number;
 import com.hms.model.HitRecord;
 import com.hms.model.RejectClaim;
 
-rule "PT401 2"
+rule "Edit 90000 317 063"
 	dialect "mvel"
 	when
-		$hit : HitRecord( HIT_CI_CARRIER_CODE == "BCVA" , principalProcedureCode1550 == "H" , HIT_PROCEDURE_CODE_5 not in ( "H0031", "H0032", "H0014", "H0019", "H0027" ) )
+		$hit : HitRecord( HIT_CI_CARRIER_CODE == "BCCA" , HIT_CI_ORIG_SOURCE_CODE_CREATE == "R3" )
 	then
 		RejectClaim $rejectClaim = new RejectClaim();
 		insert( $rejectClaim );
-		$rejectClaim.setJobName( "CIC" );
-		$rejectClaim.setEditCode( "PT401" );
-		$rejectClaim.setExternal( "Internal Action Needed" );
+		$rejectClaim.setEditCode( "90000_317_063" );
+		$rejectClaim.setReason( "HIT_CI_CARRIER_CODE = "+$hit.getHIT_CI_CARRIER_CODE() + " AND HIT_CI_ORIG_SOURCE_CODE_CREATE = " + $hit.getHIT_CI_ORIG_SOURCE_CODE_CREATE() );
 		$rejectClaim.setInternal( "Unbillable Claims" );
+		$rejectClaim.setExternal( "Internal Action needed" );
 		$rejectClaim.setFinalDetermination( "Actionable" );
 		$rejectClaim.setOwner( "HMS Rule" );
 		$rejectClaim.setProduct( "Direct Bill" );
-		$rejectClaim.setReason( "TPLSCPT3_Carrier Code = BCVA & 1550_PRINC_PROD_CODE = "+$hit.getHIT_PCS10_PRINC_PROC_CODE() );
 		$hit.addRejectClaim( $rejectClaim );
 		$hit.setRejected( true );
 end

@@ -83,6 +83,14 @@ public class CiDisallowance implements java.io.Serializable {
         this.CID_999_0009_Flag = CID_999_0009_Flag;
     }
 
+    public String getCID_999_0010_Flag() {
+        return CID_999_0010_Flag;
+    }
+    
+    public void setCID_999_0010_Flag(String CID_999_0010_Flag) {
+        this.CID_999_0010_Flag = CID_999_0010_Flag;
+    }
+
     public String getCID_999_0009_OTP_AMT() {
         return CID_999_0009_OTP_AMT;
     }
@@ -91,10 +99,6 @@ public class CiDisallowance implements java.io.Serializable {
         this.CID_999_0009_OTP_AMT = CID_999_0009_OTP_AMT;
     }
 
-    public String getCID_999_0010_Flag() {
-        return CID_999_0010_Flag;
-    }
-    
     public String getJob() {
         return Job;
     }

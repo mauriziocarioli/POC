@@ -2,19 +2,23 @@ package com.hms.rules.cid;
 
 import java.lang.Number;
 import com.hms.model.HitRecord;
+import com.hms.model.CiDisallowance;
 
 rule "CID 999 0003 CT04"
 	dialect "mvel"
 	when
 		$hit : HitRecord( profDisallowance == "TRUE" )
 	then
-		$hit.setDisallowed( false );
-		$hit.setEditCode( "CID_999_0003" );
-		$hit.setReason( "Claim not selected for disallowance because claim type = 04 and a hit in the same ICN has an alphanumeric procedure code not approved for professional claims disallowance" );
-		$hit.setInternal( "Unbillable Claims" );
-		$hit.setExternal( "Client Requirement" );
-		$hit.setFinalDetermination( "Non-Actionable" );
-		$hit.setOwner( "Account Team" );
-		$hit.setProduct( "CI Disallowance" );
-		$hit.setCID_999_0003_Flag( "TRUE" );
+		CiDisallowance $cid = new CiDisallowance();
+		insert( $cid );
+		$cid.setEditCode( "CID_999_0003" );
+		$cid.setReason( "Claim not selected for disallowance because claim type = 04 and a hit in the same ICN has an alphanumeric procedure code not approved for professional claims disallowance" );
+		$cid.setInternal( "Unbillable Claims" );
+		$cid.setExternal( "Client Requirement" );
+		$cid.setFinalDetermination( "Non-Actionable" );
+		$cid.setOwner( "Account Team" );
+		$cid.setProduct( "CI Disallowance" );
+		$cid.setCID_999_0003_Flag( "TRUE" );
+		$hit.addCiDisallowance($cid);
+		$hit.setDisallowed(true);
 end

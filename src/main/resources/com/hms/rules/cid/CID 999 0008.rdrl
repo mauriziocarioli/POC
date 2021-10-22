@@ -2,19 +2,23 @@ package com.hms.rules.cid;
 
 import java.lang.Number;
 import com.hms.model.HitRecord;
+import com.hms.model.CiDisallowance;
 
 rule "CID 999 0008"
 	dialect "mvel"
 	when
 		$hit : HitRecord( HIT_CI_CARRIER_CODE in ( "94123", "95540", "95669", "52095", "95204", "60053", "93079", "21313" ) )
 	then
-		$hit.setCID_999_0008_Flag( "TRUE" );
+		CiDisallowance $cid = new CiDisallowance();
+		insert( $cid );
+		$cid.setCID_999_0008_Flag( "TRUE" );
+		$cid.setEditCode( "CID_999_0008" );
+		$cid.setReason( "Claim not selected for disallowance because carrier code = "+$hit.getHIT_CI_CARRIER_CODE() );
+		$cid.setInternal( "Unbillable Claim" );
+		$cid.setExternal( "Internal Action Needed" );
+		$cid.setFinalDetermination( "Actionable" );
+		$cid.setOwner( "HMS Rule" );
+		$cid.setProduct( "CI Disallowance" );
+		$hit.addCiDisallowance($cid);
 		$hit.setDisallowed( false );
-		$hit.setEditCode( "CID_999_0008" );
-		$hit.setReason( "Claim not selected for disallowance because carrier code = "+$hit.getHIT_CI_CARRIER_CODE() );
-		$hit.setInternal( "Unbillable Claim" );
-		$hit.setExternal( "Internal Action Needed" );
-		$hit.setFinalDetermination( "Actionable" );
-		$hit.setOwner( "HMS Rule" );
-		$hit.setProduct( "CI Disallowance" );
 end

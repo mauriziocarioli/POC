@@ -2,19 +2,23 @@ package com.hms.rules.cid;
 
 import java.lang.Number;
 import com.hms.model.HitRecord;
+import com.hms.model.CiDisallowance;
 
 rule "CID 999 0007"
 	dialect "mvel"
 	when
 		$hit : HitRecord( HIT_CI_LAST_SRCE_UPDATE_DETAIL == "YN" )
 	then
+		CiDisallowance $cid = new CiDisallowance();
+		insert( $cid );
+		$cid.setCID_999_0007_Flag( "TRUE" );
+		$cid.setEditCode( "CID_999_0007" );
+		$cid.setReason( "Claim not selected because it was identified as newborn based on last source update code = "+$hit.getHIT_CI_LAST_SRCE_UPDATE_DETAIL() );
+		$cid.setInternal( "Unbillable Claims" );
+		$cid.setExternal( "Internal Action Needed" );
+		$cid.setFinalDetermination( "Actionable" );
+		$cid.setOwner( "HMS Rule" );
+		$cid.setProduct( "CI Disallowance" );
+		$hit.addCiDisallowance($cid);
 		$hit.setDisallowed( false );
-		$hit.setCID_999_0007_Flag( "TRUE" );
-		$hit.setEditCode( "CID_999_0007" );
-		$hit.setReason( "Claim not selected because it was identified as newborn based on last source update code = "+$hit.getHIT_CI_LAST_SRCE_UPDATE_DETAIL() );
-		$hit.setInternal( "Unbillable Claims" );
-		$hit.setExternal( "Internal Action Needed" );
-		$hit.setFinalDetermination( "Actionable" );
-		$hit.setOwner( "HMS Rule" );
-		$hit.setProduct( "CI Disallowance" );
 end

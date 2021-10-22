@@ -2,19 +2,23 @@ package com.hms.rules.cicynnbn;
 
 import java.lang.Number;
 import com.hms.model.HitRecord;
+import com.hms.model.RejectClaim;
 
 rule "CICYNNBN Contract 303"
 	dialect "mvel"
 	when
 		$hit : HitRecord( HIT_CI_ORIG_SOURCE_CODE_CREATE == "YN" || HIT_CI_LAST_SRCE_UPDATE_DETAIL == "YN" , HIT_PCF_3BYTE_CONTRACT_NUM == "303" , PERIOD_FROM_DATE_1550 >= "01-Jan-1900" , PERIOD_THRU_DATE_1550 <= "12-Dec-2011" )
 	then
+		RejectClaim $rejectClaim = new RejectClaim();
+		insert( $rejectClaim );
+		$rejectClaim.setJob( "CIC" );
+		$rejectClaim.setEditCode( "NBN01" );
+		$rejectClaim.setReason( "CICNNBN_1550 matched to settlement table base on YNSETTLE control card. Client code = 303 and period thru date 1550 occurred before 12/31/2011" );
+		$rejectClaim.setInternal( "Unbillable Claims" );
+		$rejectClaim.setExternal( "Internal Action Needed" );
+		$rejectClaim.setFinalDetermination( "Actionable" );
+		$rejectClaim.setOwner( "HMS Rule" );
+		$rejectClaim.setProduct( "Direct Bill" );
+		$hit.addRejectClaim( $rejectClaim );
 		$hit.setRejected( true );
-		$hit.setJob( "CIC" );
-		$hit.setEditCode( "NBN01" );
-		$hit.setReason( "CICNNBN_1550 matched to settlement table base on YNSETTLE control card. Client code = 303 and period thru date 1550 occurred before 12/31/2011" );
-		$hit.setInternal( "Unbillable Claims" );
-		$hit.setExternal( "Internal Action Needed" );
-		$hit.setFinalDetermination( "Actionable" );
-		$hit.setOwner( "HMS Rule" );
-		$hit.setProduct( "Direct Bill" );
 end

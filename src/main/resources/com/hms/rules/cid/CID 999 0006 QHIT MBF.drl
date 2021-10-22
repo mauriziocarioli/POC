@@ -1,0 +1,125 @@
+package com.hms.rules.cid;
+//generated from Decision Table
+import com.hms.model.HitRecord;
+import com.hms.model.CiDisallowance;
+dialect "mvel";
+// rule values at B10, header at B5
+rule "CID 999 0006 QHIT MBF_10"
+	activation-group "first-hit-policy-activation-group"
+	when
+		$hit : HitRecord(HIT_CI_ORIG_SOURCE_CODE_CREATE == "YN")
+	then
+		$hit.setDisallowanceReject( true );
+		CiDisallowance $cid = new CiDisallowance();
+		insert( $cid );
+		$cid.setCID_999_0006_Flag( "TRUE" );
+		$cid.setEditCode( "CID_999_0006_QHIT_MBF" );
+		$cid.setReason( "Claim not selected because original source code indicates newborn policy" );
+		$cid.setInternal( "Eligibility" );
+		$cid.setExternal( "Non-reimbursable Medicaid Payment" );
+		$cid.setFinalDetermination( "Non-Actionable" );
+		$cid.setOwner( "Compliance" );
+		$cid.setProduct( "CI Disallowance" );
+		$hit.addCiDisallowance($cid);
+end
+
+// rule values at B11, header at B5
+rule "CID 999 0006 QHIT MBF_11"
+	activation-group "first-hit-policy-activation-group"
+	when
+		$hit : HitRecord(HIT_CI_LAST_SRCE_UPDATE_DETAIL == "YN")
+	then
+		$hit.setDisallowanceReject( true );
+		CiDisallowance $cid = new CiDisallowance();
+		insert( $cid );
+		$cid.setCID_999_0006_Flag( "TRUE" );
+		$cid.setEditCode( "CID_999_0006_QHIT_MBF" );
+		$cid.setReason( "Claim not selected because original source code indicates newborn policy" );
+		$cid.setInternal( "Eligibility" );
+		$cid.setExternal( "Non-reimbursable Medicaid Payment" );
+		$cid.setFinalDetermination( "Non-Actionable" );
+		$cid.setOwner( "Compliance" );
+		$cid.setProduct( "CI Disallowance" );
+		$hit.addCiDisallowance($cid);
+end
+
+// rule values at B12, header at B5
+rule "CID 999 0006 QHIT MBF_12"
+	activation-group "first-hit-policy-activation-group"
+	when
+		$hit : HitRecord(HIT_CI_QHIT_RULE == "996")
+	then
+		$hit.setDisallowanceReject( true );
+		CiDisallowance $cid = new CiDisallowance();
+		insert( $cid );
+		$cid.setCID_999_0006_Flag( "TRUE" );
+		$cid.setEditCode( "CID_999_0006_QHIT_MBF" );
+		$cid.setReason( "Claim not selected because original source code indicates newborn policy" );
+		$cid.setInternal( "Eligibility" );
+		$cid.setExternal( "Non-reimbursable Medicaid Payment" );
+		$cid.setFinalDetermination( "Non-Actionable" );
+		$cid.setOwner( "Compliance" );
+		$cid.setProduct( "CI Disallowance" );
+		$hit.addCiDisallowance($cid);
+end
+
+// rule values at B13, header at B5
+rule "CID 999 0006 QHIT MBF_13"
+	activation-group "first-hit-policy-activation-group"
+	when
+		$hit : HitRecord(HIT_CI_ORIG_SOURCE_CODE_CREATE != "YN", HIT_CI_QHIT_RULE in ('992','993','994','995','997'), HIT_SUPER_COMMON_LN_FLAG == "")
+	then
+		$hit.setDisallowanceReject( true );
+		CiDisallowance $cid = new CiDisallowance();
+		insert( $cid );
+		$cid.setCID_999_0006_Flag( "TRUE" );
+		$cid.setEditCode( "CID_999_0006_QHIT_MBF" );
+		$cid.setReason( "Claim not selected because QHIT Rule is "+$hit.getHIT_CI_QHIT_RULE()+" and common LN Flag is not empty : "+$hit.getHIT_SUPER_COMMON_LN_FLAG() );
+		$cid.setInternal( "Eligibility" );
+		$cid.setExternal( "Internal Action Needed" );
+		$cid.setFinalDetermination( "Actionable" );
+		$cid.setOwner( "Carrier Team" );
+		$cid.setProduct( "CI Disallowance" );
+		$hit.addCiDisallowance($cid);
+end
+
+// rule values at B14, header at B5
+rule "CID 999 0006 QHIT MBF_14"
+	activation-group "first-hit-policy-activation-group"
+	when
+		$hit : HitRecord(HIT_CI_LAST_SRCE_UPDATE_DETAIL != "YN", HIT_CI_QHIT_RULE in ('992','993','994','995','997'), HIT_SUPER_COMMON_LN_FLAG == "")
+	then
+		$hit.setDisallowanceReject( true );
+		CiDisallowance $cid = new CiDisallowance();
+		insert( $cid );
+		$cid.setCID_999_0006_Flag( "TRUE" );
+		$cid.setEditCode( "CID_999_0006_QHIT_MBF" );
+		$cid.setReason( "Claim not selected because QHIT Rule is "+$hit.getHIT_CI_QHIT_RULE()+" and common LN Flag is not empty : "+$hit.getHIT_SUPER_COMMON_LN_FLAG() );
+		$cid.setInternal( "Eligibility" );
+		$cid.setExternal( "Internal Action Needed" );
+		$cid.setFinalDetermination( "Actionable" );
+		$cid.setOwner( "Carrier Team" );
+		$cid.setProduct( "CI Disallowance" );
+		$hit.addCiDisallowance($cid);
+end
+
+// rule values at B15, header at B5
+rule "CID 999 0006 QHIT MBF_15"
+	activation-group "first-hit-policy-activation-group"
+	when
+		$hit : HitRecord(HIT_CI_QHIT_RULE != "996", HIT_CI_QHIT_RULE in ('992','993','994','995','997'), HIT_SUPER_COMMON_LN_FLAG == "")
+	then
+		$hit.setDisallowanceReject( true );
+		CiDisallowance $cid = new CiDisallowance();
+		insert( $cid );
+		$cid.setCID_999_0006_Flag( "TRUE" );
+		$cid.setEditCode( "CID_999_0006_QHIT_MBF" );
+		$cid.setReason( "Claim not selected because QHIT Rule is "+$hit.getHIT_CI_QHIT_RULE()+" and common LN Flag is not empty : "+$hit.getHIT_SUPER_COMMON_LN_FLAG() );
+		$cid.setInternal( "Eligibility" );
+		$cid.setExternal( "Internal Action Needed" );
+		$cid.setFinalDetermination( "Actionable" );
+		$cid.setOwner( "Carrier Team" );
+		$cid.setProduct( "CI Disallowance" );
+		$hit.addCiDisallowance($cid);
+end
+

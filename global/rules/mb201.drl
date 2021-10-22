@@ -1,0 +1,50 @@
+package com.hms.rules.mb201;
+
+import com.hms.model.HitRecord;
+import com.hms.model.REVENUEBUCKET;
+import com.hms.model.TPLREVLU;
+import java.util.List;
+
+rule "checkEmptyRevenueBucket"
+when 
+   $hitRecord : HitRecord(REVENUE_BUCKET.size() == 0)
+then
+   System.out.println("Record Rejected");
+end   
+   
+rule "processRevenueBucket1"
+when 
+  $hitRecord : HitRecord(REVENUE_BUCKET.size() > 0,$buckets : REVENUE_BUCKET)
+  $revBucket : REVENUEBUCKET(HIT_REV_CODE == "001" || HIT_REV_CHARGE == 0) from $buckets
+then
+  modify($revBucket) { setRejected(true) };
+end  
+
+rule "processRevenueBucket2"
+when 
+  $hitRecord : HitRecord(REVENUE_BUCKET.size() > 0,HIT_CI_LAST_SRCE_UPDATE_DETAIL in ('AB','BC','DE'))
+then
+  TPLREVLU tpl = new TPLREVLU();
+  tpl.setReturnValue($hitRecord.TPLREVLU());
+end
+
+  
+rule "ProcessRevenueBucket2.2"
+when
+  $hitRecord : HitRecord(HIT_CI_LAST_SRCE_UPDATE_DETAIL != "DC",$buckets : REVENUE_BUCKET,(HIT_PCF_3BYTE_CONTRACT_NUM != "303"))
+  $tpl : TPLREVLU(returnValue == "90")
+  $revBucket : REVENUEBUCKET() from $buckets
+then
+    modify($revBucket) { setRejected(true) };
+end
+
+
+rule "finalEvalution"
+when
+ $hitRecord : HitRecord(REVENUE_BUCKET.size() > 0,$buckets : REVENUE_BUCKET)
+ $buckList : List() from collect(REVENUEBUCKET(rejected == true) from $buckets)
+ Boolean($buckList.size() == $hitRecord.getREVENUE_BUCKET().size())
+then
+  modify($hitRecord) { setRejected(true) };
+end 
+ 
